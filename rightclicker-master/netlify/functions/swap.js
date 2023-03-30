@@ -18,4 +18,4 @@ const handler = async function () {
 };
 
 // Schedule the function to run at 7:00 AM UTC on Monday, Thursday, and Sunday
-exports.handler = schedule("cron(0 7 * * 1,4,7)", handler);
+exports.handler = schedule("0 7 * * 1,4,7", handler);
