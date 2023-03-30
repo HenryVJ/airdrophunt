@@ -17,5 +17,31 @@ const handler = async function () {
   console.log(`See transactions at: https://goerli.etherscan.io/address/${ACCOUNT_1.address}`);
 };
 
-// Schedule the function to run at 7:00 AM UTC on Monday, Thursday, and Sunday
-exports.handler = schedule("0 7 * * 1,4,7", handler);
+// Schedule the function to run on Monday, Thursday, and Sunday
+exports.handler = async function (event, context) {
+  // Set the time of day to run the function (in UTC)
+  const runTime = "07:00:00";
+  
+  // Set the days of the week to run the function
+  const runDays = [1, 4, 7]; // Monday, Thursday, Sunday
+  
+  // Get the current UTC time
+  const now = new Date();
+  const utcNow = new Date(now.toUTCString());
+  
+  // Calculate the time until the next scheduled run
+  const timeUntilNextRun = runDays
+    .map(day => {
+      const nextRun = new Date(utcNow);
+      nextRun.setDate(nextRun.getDate() + ((day + 7 - nextRun.getUTCDay()) % 7));
+      nextRun.setUTCHours(runTime.substr(0,2), runTime.substr(3,2), runTime.substr(6,2), 0);
+      return nextRun - utcNow;
+    })
+    .reduce((minTime, time) => time < minTime ? time : minTime, Infinity);
+  
+  // Wait for the next scheduled run time
+  await new Promise(resolve => setTimeout(resolve, timeUntilNextRun));
+  
+  // Run the scheduled function
+  await handler();
+};
