@@ -1,10 +1,9 @@
 const { schedule } = require("@netlify/functions");
 const { ethers } = require("ethers");
-require("dotenv").config();
 
 const IERC20 = require('@openzeppelin/contracts/build/contracts/ERC20.json');
 
-const handler = async function () {
+const scheduledFunction = async function () {
   console.log("Running function...");
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
   const ACCOUNT_1 = new ethers.Wallet(process.env.PRIVATE_KEY_1, provider);
