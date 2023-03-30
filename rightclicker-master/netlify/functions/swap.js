@@ -33,4 +33,4 @@ const handler = async function (event, context) {
   }
 }
 
-exports.handler = schedule("@daily", handler)
+exports.handler = schedule("@weekly", handler)
